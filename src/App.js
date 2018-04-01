@@ -22,6 +22,7 @@ class App extends Component {
     this.handleLastName = this.handleLastName.bind(this);
     this.handleEmail = this.handleEmail.bind(this);
     this.handlePassword = this.handlePassword.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   toggleCategory(event) {
@@ -29,7 +30,11 @@ class App extends Component {
     this.setState({
       toggleCategory: selectedCategory,
       mode: "Login",
-      modeToggleText: "New User? Sign Up"
+      modeToggleText: "New User? Sign Up",
+      email: "",
+      password: "",
+      firstName: "",
+      lastName: ""
     });
   }
 
@@ -37,38 +42,96 @@ class App extends Component {
     if (this.state.modeToggleText === "New User? Sign Up") {
       this.setState({
         modeToggleText: "Existing User? Login",
-        mode: "Sign Up"
+        mode: "Sign Up",
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: ""
       });
     } else {
       this.setState({
         mode: "Login",
-        modeToggleText: "New User? Sign Up"
+        modeToggleText: "New User? Sign Up",
+        email: "",
+        password: "",
+        firstName: "",
+        lastName: ""
       });
     }
   }
 
   handleFirstName(event) {
     this.setState({
-      firstName: event.target.value,
+      firstName: event.target.value
     });
-  } 
+  }
 
   handleLastName(event) {
     this.setState({
-      lastName: event.target.value,
+      lastName: event.target.value
     });
   }
 
   handleEmail(event) {
     this.setState({
-      email: event.target.value,
+      email: event.target.value
     });
   }
 
   handlePassword(event) {
     this.setState({
-      password: event.target.value,
+      password: event.target.value
     });
+  }
+
+  handleSubmit() {
+    let apiRequestObject = {};
+    let fetchUrl;
+    
+    if(this.state.email === '') {
+      alert("Please enter a valid Email");
+      return;
+    } else if(this.state.password === '') {
+      alert("Please enter a valid Password");
+      return;
+    }
+
+    apiRequestObject.email = this.state.email;
+    apiRequestObject.password = this.state.password;
+
+    if (this.state.mode === "Login") {
+      if (this.state.toggleCategory === "user") {
+        fetchUrl = "";
+      } else {
+        fetchUrl = "";
+      }
+    } else {
+      if (this.state.toggleCategory === "user") {
+        fetchUrl = "";
+        apiRequestObject.firstName = this.state.firstName;
+        apiRequestObject.lastName = this.state.lastName;
+      } else {
+        fetchUrl = "";
+        apiRequestObject.firstName = this.state.firstName;
+        apiRequestObject.lastName = this.state.lastName;
+      }
+    }
+
+    fetch(fetchUrl, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: apiRequestObject
+    })
+      .then(response => response.json())
+      .then(responseJson => {
+        if (responseJson.status === 201) {
+          console.log("Yay");
+        } else {
+          console.log("Nooo");
+        }
+      });
   }
 
   render() {
@@ -147,6 +210,7 @@ class App extends Component {
                       : "first-name invisible-inputs"
                   }
                   required
+                  value={this.state.firstName}
                   onChange={this.handleFirstName}
                   placeholder="First Name"
                 />
@@ -167,6 +231,7 @@ class App extends Component {
                       : "last-name invisible-inputs"
                   }
                   required
+                  value={this.state.lastName}
                   onChange={this.handleLastName}
                   placeholder="Last Name"
                 />
@@ -177,6 +242,7 @@ class App extends Component {
                   spellCheck="false"
                   className="email"
                   required
+                  value={this.state.email}
                   onChange={this.handleEmail}
                   placeholder="Email"
                 />
@@ -187,16 +253,19 @@ class App extends Component {
                   spellCheck="false"
                   className="password"
                   required
+                  value={this.state.password}
                   onChange={this.handlePassword}
                   placeholder="Password"
                 />
               </span>
             </div>
-            <CustomButton
-              isDisabled={false}
-              buttonText={this.state.mode}
-              style={{ margin: "0 auto", marginTop: "40px" }}
-            />
+            <div onClick={this.handleSubmit}>
+              <CustomButton
+                isDisabled={false}
+                buttonText={this.state.mode}
+                style={{ margin: "0 auto", marginTop: "40px" }}
+              />
+            </div>
             <button className="mode-toggle-text" onClick={this.toggleMode}>
               {this.state.modeToggleText}
             </button>
@@ -222,10 +291,12 @@ class App extends Component {
               padding-right: 40px;
               padding-top: 15px;
               font-weight: 400;
+              cursor: pointer;
             }
             .main-title {
               flex: 1;
               padding-right: 25%;
+              color: #60b2f0
             }
             .container {
               display: flex;
@@ -249,6 +320,7 @@ class App extends Component {
               display: flex;
               flex-direction: column;
               max-width: 285px;
+              margin: 0 auto;
             }
             .logo-top {
               display: flex;
@@ -280,6 +352,9 @@ class App extends Component {
             .illustration {
               padding-top: 65px;
             }
+            .landing-page-illustration {
+              height: 330px;
+            }
             .right-side {
               min-width: 45%;
               margin-right: 10%;
@@ -294,6 +369,7 @@ class App extends Component {
               padding-top: 35px;
               margin-right: 30px;
               margin-left: 30px;
+              cursor: pointer;
             }
             .toggle-btn:after {
               border-bottom: solid 2px #ffffff;
@@ -331,6 +407,7 @@ class App extends Component {
               font-weight: 300;
               margin-top: 40px;
               width: 100%;
+              border-bottom: solid 2px #ffffff80;
             }
             .email:focus,
             .password:focus,
@@ -342,12 +419,11 @@ class App extends Component {
               border-bottom: solid 2px #ffffff;
               display: block;
               content: "";
-              transform: scaleX(1);
-              opacity: 0.5;
-              transition: all 250ms ease-in-out;
+              transform: scaleX(0);
+              transition: all 500ms ease-in-out;
+              margin-top: -2px;
             }
             .input-container:focus-within:after {
-              opacity: 1;
               transform: scaleX(1);
               outline: 0;
             }
@@ -359,9 +435,10 @@ class App extends Component {
               font-size: 19px;
               background: none;
               border: none;
-              color: white;
+              color: #459af1;
               font-weight: 500;
               margin-top: 30px;
+              cursor: pointer;
             }
             .mode-toggle-text:focus {
               outline: 0;

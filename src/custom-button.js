@@ -45,6 +45,9 @@ class CustomButton extends React.Component {
               background-color: #ffffff;
               background-repeat: no-repeat !important;
             }
+            .custom-btn:focus {
+                outline: 0;
+            }
             .custom-btn:before {
               content: " ";
               background-image: url(${leftWhite});
