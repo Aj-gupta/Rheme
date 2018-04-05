@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import logo from "./static/rheme-logo.svg";
 import illustration from "./static/landing-page-illustration.svg";
 import CustomButton from "./custom-button";
+import { hashHistory } from "react-router"; 
 
 class App extends Component {
   constructor(props) {
@@ -87,11 +88,11 @@ class App extends Component {
   handleSubmit() {
     let apiRequestObject = {};
     let fetchUrl;
-    
-    if(this.state.email === '') {
+
+    if (this.state.email === "") {
       alert("Please enter a valid Email");
       return;
-    } else if(this.state.password === '') {
+    } else if (this.state.password === "") {
       alert("Please enter a valid Password");
       return;
     }
@@ -128,6 +129,7 @@ class App extends Component {
       .then(responseJson => {
         if (responseJson.status === 201) {
           console.log("Yay");
+          hashHistory.push("/dashboard-user");
         } else {
           console.log("Nooo");
         }
@@ -296,7 +298,7 @@ class App extends Component {
             .main-title {
               flex: 1;
               padding-right: 25%;
-              color: #60b2f0
+              color: #60b2f0;
             }
             .container {
               display: flex;
@@ -408,6 +410,7 @@ class App extends Component {
               margin-top: 40px;
               width: 100%;
               border-bottom: solid 2px #ffffff80;
+              box-shadow: none;
             }
             .email:focus,
             .password:focus,
