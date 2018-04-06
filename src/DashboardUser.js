@@ -4,6 +4,26 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import 'react-bootstrap-typeahead/css/Typeahead-bs4.css';
 
 class DashboardUser extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      keyword: "",
+    }
+
+    this.handleKeyword = this.handleKeyword.bind(this);
+    this.retrieveWebsites = this.retrieveWebsites.bind(this);
+  }
+
+  handleKeyword(value) {
+    this.setState({ keyword: value[0]});
+  }
+
+  retrieveWebsites(event) {
+    if(event.keyCode === 13) {
+      console.log("retirvieng websites");
+    }
+  }
+
   render() {
     const options = [
       'John',
@@ -35,6 +55,8 @@ class DashboardUser extends Component {
                   options={options}
                   bsSize="large"
                   placeholder="Search using a Keyword (For e.g. technology, social, etc.)"
+                  onChange={this.handleKeyword}
+                  onKeyDown={this.retrieveWebsites}
                 />
                 </div>
                 {/* <button className="search-button">
