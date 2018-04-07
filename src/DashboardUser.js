@@ -23,6 +23,8 @@ function Website({ url, hours, hits }) {
           flex-grow: 1;
           width: 100%;
           text-align: center;
+          border: 1px solid #0a4a7a;
+          padding: 12px;
         }
       `}
       </style>
@@ -183,10 +185,12 @@ class DashboardUser extends Component {
               width: 6%;
             }
             .websites-list {
-              color: white;
+              color: #c6c6c6;
               font-family: Montserrat;
-              font-size: 22px;
+              font-size: 19px;
               text-align: left;
+              background: #211b35cc;
+              border: 2px solid #0a4a7a;
             }
             .website-container {
               margin-top: 60px;
@@ -200,7 +204,7 @@ class DashboardUser extends Component {
               color: #60b2f0;
               font-family: Montserrat;
               font-weight: 600;
-              font-size: 23px;
+              font-size: 20px;
             }
             .website-headers div:first-child {
               border-top-left-radius: 17px;
@@ -209,12 +213,12 @@ class DashboardUser extends Component {
               border-top-right-radius: 17px;
             } 
             .website-header {
-              border: 2px solid #60b2f0;
+              border: 2px solid #0a4a7a;
               box-sizing: border-box;
               flex-grow: 1;
               width: 100%;
-              background: white;
-              padding: 0.8em 1.2em;
+              background: #1a162a;
+              padding: 0.5em 0.5em;
             }
           `}
         </style>
