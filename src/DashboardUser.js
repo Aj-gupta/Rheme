@@ -9,24 +9,25 @@ function Website({ url, hours, hits }) {
       <div className="website-detail">{url}</div>
       <div className="website-detail">{hours}</div>
       <div className="website-detail">{hits}</div>
-      <style jsx>{`
-        .website-details {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-around;
-        }
-        .website-details div:first-child {
-          text-align: left !important;
-        }
-        .website-detail {
-          box-sizing: border-box;
-          flex-grow: 1;
-          width: 100%;
-          text-align: center;
-          border: 1px solid #0a4a7a;
-          padding: 12px;
-        }
-      `}
+      <style jsx>
+        {`
+          .website-details {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+          }
+          .website-details div:first-child {
+            text-align: left !important;
+          }
+          .website-detail {
+            box-sizing: border-box;
+            flex-grow: 1;
+            width: 100%;
+            text-align: center;
+            border: 1px solid #0a4a7a;
+            padding: 12px;
+          }
+        `}
       </style>
     </div>
   );
@@ -37,16 +38,18 @@ class DashboardUser extends Component {
     super(props);
     this.state = {
       keyword: "",
-      domains: [
-        { url: "himank-goel.github.io", hours: 45, hits: 10 },
-        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
-        { url: "facebook.com", hours: 97, hits: 25 },
-        { url: "google.com", hours: 104, hits: 50 }
-      ]
+      domains: [],
+      options: [],
+      showWebsites: false
     };
 
     this.handleKeyword = this.handleKeyword.bind(this);
     this.retrieveWebsites = this.retrieveWebsites.bind(this);
+  }
+
+  componentWillMount() {
+    const options = ["John", "Miles", "Charles", "Herbie"];
+    this.setState({ options });
   }
 
   handleKeyword(value) {
@@ -56,18 +59,20 @@ class DashboardUser extends Component {
   retrieveWebsites(event) {
     if (event.keyCode === 13) {
       console.log("retirvieng websites");
+      const domains = [
+        { url: "himank-goel.github.io", hours: 45, hits: 10 },
+        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
+        { url: "facebook.com", hours: 97, hits: 25 },
+        { url: "google.com", hours: 104, hits: 50 }
+      ];
+      this.setState({ showWebsites: true, domains });
     }
   }
 
   render() {
-    const options = ["John", "Miles", "Charles", "Herbie"];
     const websitesList = this.state.domains.map(website => {
       return (
-        <Website
-          url={website.url}
-          hours={website.hours}
-          hits={website.hits}
-        />
+        <Website url={website.url} hours={website.hours} hits={website.hits} />
       );
     });
     return (
@@ -89,7 +94,7 @@ class DashboardUser extends Component {
                   <Typeahead
                     selectHintOnEnter={true}
                     highlightOnlyResult={true}
-                    options={options}
+                    options={this.state.options}
                     bsSize="large"
                     placeholder="Search using a Keyword (For e.g. technology, social, etc.)"
                     onChange={this.handleKeyword}
@@ -102,14 +107,18 @@ class DashboardUser extends Component {
               </div>
             </div>
           </form>
-          <div className="website-container">
-            <div className="website-headers">
-              <div className="website-header">URL</div>
-              <div className="website-header">Number of Hours</div>
-              <div className="website-header">Number of Hits</div>
+          {this.state.showWebsites ? (
+            <div className="website-container">
+              <div className="website-headers">
+                <div className="website-header">URL</div>
+                <div className="website-header">Number of Hours</div>
+                <div className="website-header">Number of Hits</div>
+              </div>
+              <div className="websites-list">{websitesList}</div>
             </div>
-            <div className="websites-list">{websitesList}</div>
-          </div>
+          ) : (
+            <div />
+          )}
         </div>
         <style jsx>
           {`
@@ -192,6 +201,9 @@ class DashboardUser extends Component {
               background: #211b35cc;
               border: 2px solid #0a4a7a;
             }
+            .websites-list .website-details:nth-child(even) {
+              background: #312752;
+            }
             .website-container {
               margin-top: 60px;
               display: flex;
@@ -211,7 +223,7 @@ class DashboardUser extends Component {
             }
             .website-headers div:nth-child(3) {
               border-top-right-radius: 17px;
-            } 
+            }
             .website-header {
               border: 2px solid #0a4a7a;
               box-sizing: border-box;
