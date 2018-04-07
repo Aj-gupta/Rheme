@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead-bs4.css";
+import PieChart from "react-svg-piechart"
 
 function Website({ url, hours, hits }) {
   return (
@@ -40,7 +41,9 @@ class DashboardUser extends Component {
       keyword: "",
       domains: [],
       options: [],
-      showWebsites: false
+      data: [],
+      showWebsites: false,
+      showData: false
     };
 
     this.handleKeyword = this.handleKeyword.bind(this);
@@ -63,9 +66,30 @@ class DashboardUser extends Component {
         { url: "himank-goel.github.io", hours: 45, hits: 10 },
         { url: "gesture.gecho.tech", hours: 10, hits: 3 },
         { url: "facebook.com", hours: 97, hits: 25 },
-        { url: "google.com", hours: 104, hits: 50 }
+        { url: "google.com", hours: 104, hits: 50 },
+        { url: "himank-goel.github.io", hours: 45, hits: 10 },
+        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
+        { url: "facebook.com", hours: 97, hits: 25 },
+        { url: "google.com", hours: 104, hits: 50 },
+        { url: "himank-goel.github.io", hours: 45, hits: 10 },
+        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
+        { url: "facebook.com", hours: 97, hits: 25 }
       ];
-      this.setState({ showWebsites: true, domains });
+      const letters = '0123456789ABCDEF';
+      let data = [];
+      domains.map(domain => {
+        let color = '#';
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        let object = {
+          title: domain.url,
+          value: domain.hits,
+          color: color
+        }
+        data.push(object);
+      });
+      this.setState({ showWebsites: true, domains, data, showData: true });
     }
   }
 
@@ -116,6 +140,16 @@ class DashboardUser extends Component {
               </div>
               <div className="websites-list">{websitesList}</div>
             </div>
+          ) : (
+            <div />
+          )}
+          {this.state.showData ? (
+            <PieChart
+              data={this.state.data}
+              // expandOnHover
+              viewBoxSize={5}
+              strokeWidth={0}
+            />
           ) : (
             <div />
           )}
@@ -200,6 +234,8 @@ class DashboardUser extends Component {
               text-align: left;
               background: #211b35cc;
               border: 2px solid #0a4a7a;
+              -webkit-box-shadow: rgba(0,0,0,0.8) 0px 0 10px;
+              -moz-box-shadow: rgba(0,0,0,0.8) 0 0 10px;
             }
             .websites-list .website-details:nth-child(even) {
               background: #312752;
@@ -208,6 +244,7 @@ class DashboardUser extends Component {
               margin-top: 60px;
               display: flex;
               flex-direction: column;
+              margin-bottom: 50px;
             }
             .website-headers {
               display: flex;
@@ -231,6 +268,8 @@ class DashboardUser extends Component {
               width: 100%;
               background: #1a162a;
               padding: 0.5em 0.5em;
+              -webkit-box-shadow: rgba(0,0,0,0.8) 0px 0 10px;
+              -moz-box-shadow: rgba(0,0,0,0.8) 0 0 10px;
             }
           `}
         </style>
