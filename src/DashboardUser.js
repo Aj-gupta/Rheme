@@ -4,6 +4,7 @@ import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead-bs4.css";
 import UserContribute from "./userContribute";
 import { hashHistory } from "react-router";
+import config from "./config";
 
 function Website({ url, hours, hits }) {
   return (
@@ -55,9 +56,24 @@ class DashboardUser extends Component {
   }
 
   componentWillMount() {
-    const options = ["John", "Miles", "Charles", "Herbie"];
-    this.setState({ options });
-  }
+		axios
+		.get(
+			config.baseUrl+'keywords',
+			{
+				headers: { "authorization-token": localStorage.getItem("authToken") },
+				"Content-Type": "application/json",
+				"Access-Control-Allow-Origin": "*"
+			}
+		)
+		.then(function(response) {
+			const options = JSON.parse(response.data);
+			this.setState({ options });
+		})
+		.catch(function(error) {
+			console.log(error);
+		});
+	}
+}
 
   handleKeyword(value) {
     this.setState({ keyword: value[0] });
@@ -70,20 +86,19 @@ class DashboardUser extends Component {
 
   retrieveWebsites(event) {
     if (event.keyCode === 13) {
-      console.log("retirvieng websites");
-      const domains = [
-        { url: "himank-goel.github.io", hours: 45, hits: 10 },
-        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
-        { url: "facebook.com", hours: 97, hits: 25 },
-        { url: "google.com", hours: 104, hits: 50 },
-        { url: "himank-goel.github.io", hours: 45, hits: 10 },
-        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
-        { url: "facebook.com", hours: 97, hits: 25 },
-        { url: "google.com", hours: 104, hits: 50 },
-        { url: "himank-goel.github.io", hours: 45, hits: 10 },
-        { url: "gesture.gecho.tech", hours: 10, hits: 3 },
-        { url: "facebook.com", hours: 97, hits: 25 }
-      ];
+      console.log("retrieving websites");
+			axios
+			.get(
+				config.baseUrl+'get-result?keyword='+this.state.keywords
+			)
+			.then(function(response) {
+				const domains = JSON.parse(response.data);
+				this.setState({ domains });
+			})
+			.catch(function(error) {
+				console.log(error);
+			});
+			
       const letters = "0123456789ABCDEF";
       let data = [];
       domains.map(domain => {
