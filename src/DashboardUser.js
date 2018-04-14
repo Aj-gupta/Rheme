@@ -5,6 +5,7 @@ import "react-bootstrap-typeahead/css/Typeahead-bs4.css";
 import UserContribute from "./userContribute";
 import { hashHistory } from "react-router";
 import config from "./config";
+import axios from "axios";
 
 function Website({ url, hours, hits }) {
   return (
@@ -56,24 +57,24 @@ class DashboardUser extends Component {
   }
 
   componentWillMount() {
-		axios
-		.get(
-			config.baseUrl+'keywords',
-			{
-				headers: { "authorization-token": localStorage.getItem("authToken") },
-				"Content-Type": "application/json",
-				"Access-Control-Allow-Origin": "*"
-			}
-		)
-		.then(function(response) {
-			const options = JSON.parse(response.data);
-			this.setState({ options });
-		})
-		.catch(function(error) {
-			console.log(error);
-		});
-	}
-}
+    const self = this;
+    axios
+      .get(config.baseUrl + "keywords", {
+        headers: { "authorization-token": localStorage.getItem("authToken") },
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      })
+      .then(function(response) {
+        const options = JSON.parse(response.data);
+        // console.log(this);
+        self.setState({
+          options: options
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
 
   handleKeyword(value) {
     this.setState({ keyword: value[0] });
@@ -86,38 +87,41 @@ class DashboardUser extends Component {
 
   retrieveWebsites(event) {
     if (event.keyCode === 13) {
-      console.log("retrieving websites");
-			axios
-			.get(
-				config.baseUrl+'get-result?keyword='+this.state.keywords
-			)
-			.then(function(response) {
-				const domains = JSON.parse(response.data);
-				this.setState({ domains });
-			})
-			.catch(function(error) {
-				console.log(error);
-			});
-			
-      const letters = "0123456789ABCDEF";
-      let data = [];
-      domains.map(domain => {
-        let color = "#";
-        for (var i = 0; i < 6; i++) {
-          color += letters[Math.floor(Math.random() * 16)];
-        }
-        let object = {
-          title: domain.url,
-          value: domain.hits,
-          color: color
-        };
-        data.push(object);
-      });
-      this.setState({ showWebsites: true, domains, data, showData: true });
+      console.log(event.target.value);
+      let domains = [];
+      const self = this;
+      axios
+        .get(config.baseUrl + "get-result?keyword=" + event.target.value)
+        .then(function(response) {
+          domains = JSON.parse(response.data);
+          self.setState({ domains });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+      this.setState({ showWebsites: true, domains });
     }
   }
 
   handleFind() {
+    const self = this;
+    axios
+      .get(config.baseUrl + "keywords", {
+        headers: { "authorization-token": localStorage.getItem("authToken") },
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      })
+      .then(function(response) {
+        const options = JSON.parse(response.data);
+        // console.log(this);
+        self.setState({
+          options: options
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
     this.setState({ showContribute: false });
   }
 

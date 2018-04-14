@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { hashHistory } from "react-router";
 import CustomButton from "./custom-button";
 import config from "./config.js";
+import axios from "axios";
 
 function Sublist({
   baseUrl,
@@ -234,6 +235,8 @@ class DashboardAdmin extends Component {
     };
 
     this.showAddField = this.showAddField.bind(this);
+    this.handleAddWebsite = this.handleAddWebsite.bind(this);
+    this.addWebsite = this.addWebsite.bind(this);
   }
 
   componentWillMount() {
@@ -241,32 +244,72 @@ class DashboardAdmin extends Component {
     this.setState({
       authToken
     });
-    
-    fetch(config.baseUrl+'admin/websites', {
+    let websiteDetails = [];
+    const self = this;
+    fetch(config.baseUrl + "admin/websites", {
       method: "get",
-      headers: {"authorization-token": localStorage.getItem("authToken") },
-			"Content-Type": "application/json",
-			"Access-Control-Allow-Origin": "*"
+      headers: { "authorization-token": localStorage.getItem("authToken") },
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
     })
-    .then(response => response.json())
-    .then(responseJson => {
-      if (responseJson.status === 200) {
-        const websiteDetails = responseJson.data;
-        this.setState({
-          websiteDetails
+      .then(response => response.json())
+      .then(responseJson => {
+        websiteDetails = responseJson;
+        self.setState({
+          websiteDetails: websiteDetails
         });
-      } else {
-        console.log("No");
-      }
-    });
+      });
+    // this.setState({
+    //   websiteDetails: websiteDetails
+    // });
   }
 
   showAddField() {
     this.setState({ showAddField: !this.state.showAddField });
   }
 
-  addWebsite() {
-    
+  addWebsite(event) {
+    if (event.keyCode === 13) {
+      // console.log(event.target.value);
+      // let domains = [];
+      // console.log("fucking beginnning", this);
+      const self = this;
+      axios
+        .post(
+          config.baseUrl + "admin/websites",
+          {
+            websiteUrl: event.target.value
+          },
+          {
+            headers: {
+              "authorization-token": localStorage.getItem("authToken")
+            }
+          }
+        )
+        .then(function(response) {
+          // let self = self;
+          let websiteDetails = [];
+          fetch(config.baseUrl + "admin/websites", {
+            method: "get",
+            headers: {
+              "authorization-token": localStorage.getItem("authToken")
+            },
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+            .then(response => response.json())
+            .then(responseJson => {
+              websiteDetails = responseJson;
+              // console.log("WebsiteDetails", websiteDetails, "self", this);
+              self.setState({
+                websiteDetails: websiteDetails
+              });
+            });
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
   }
 
   handleAddWebsite(event) {
@@ -322,6 +365,7 @@ class DashboardAdmin extends Component {
               required
               value={this.state.addWebsite}
               onChange={this.handleAddWebsite}
+              onKeyDown={this.addWebsite}
               placeholder="Website URL"
             />
           </div>
