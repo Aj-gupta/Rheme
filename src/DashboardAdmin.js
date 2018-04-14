@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
 import CustomButton from "./custom-button";
+import config from "./config.js";
 
 function Sublist({
   baseUrl,
@@ -240,95 +241,24 @@ class DashboardAdmin extends Component {
     this.setState({
       authToken
     });
-    const dummyData = [];
-    dummyData.push({
-      baseUrl: "www.google.com",
-      totalHits: 75,
-      total_usage_hours: 78,
-      no_of_visitors: 12,
-      details: [
-        {
-          url: "www.google.com/abcd",
-          no_of_hits: 75,
-          total_usage_hours: 78,
-          no_of_visitors: 12,
-          last_visited: "23 11 2018 T 23:43"
-        },
-        {
-          url: "www.google.com/bcde",
-          no_of_hits: 75,
-          total_usage_hours: 78,
-          no_of_visitors: 12,
-          last_visited: "23 11 2018 T 23:43"
-        }
-      ]
-    });
-    dummyData.push({
-      baseUrl: "www.facebook.com",
-      totalHits: 75,
-      total_usage_hours: 78,
-      no_of_visitors: 12,
-      details: [
-        {
-          url: "www.facebook.com/abcd",
-          no_of_hits: 75,
-          total_usage_hours: 78,
-          no_of_visitors: 12,
-          last_visited: "23 11 2018 T 23:43"
-        },
-        {
-          url: "www.facebook.com/bcde",
-          no_of_hits: 75,
-          total_usage_hours: 78,
-          no_of_visitors: 12,
-          last_visited: "23 11 2018 T 23:43"
-        }
-      ]
-    });
-    dummyData.push({
-      baseUrl: "www.google.com",
-      totalHits: 75,
-      total_usage_hours: 78,
-      no_of_visitors: 12,
-      details: [
-        {
-          url: "www.google.com/abcd",
-          no_of_hits: 75,
-          total_usage_hours: 78,
-          no_of_visitors: 12,
-          last_visited: "23 11 2018 T 23:43"
-        },
-        {
-          url: "www.google.com/bcde",
-          no_of_hits: 75,
-          total_usage_hours: 78,
-          no_of_visitors: 12,
-          last_visited: "23 11 2018 T 23:43"
-        }
-      ]
-    });
-    this.setState({
-      websiteDetails: dummyData
-    });
-    const baseURL = "http://de6a57c7.ngrok.io/";
-    let fetchUrl;
-
-    fetch(fetchUrl, {
-      method: "post",
-      headers: {}
+    
+    fetch(config.baseUrl+'admin/websites', {
+      method: "get",
+      headers: {"authorization-token": localStorage.getItem("authToken") },
+			"Content-Type": "application/json",
+			"Access-Control-Allow-Origin": "*"
     })
-      .then(response => response.json())
-      .then(responseJson => {
-        if (responseJson.status === 201) {
-          console.log("Yay");
-          const websiteDetails = [];
-          this.setState({
-            websiteDetails
-          });
-        } else {
-          console.log("Nooo");
-        }
-      });
+    .then(response => response.json())
+    .then(responseJson => {
+      if (responseJson.status === 200) {
+        const websiteDetails = responseJson.data;
+        this.setState({
+          websiteDetails
+        });
+      } else {
+        console.log("No");
+      }
+    });
   }
 
   showAddField() {
