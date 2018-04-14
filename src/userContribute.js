@@ -31,7 +31,7 @@ class UserContribute extends Component {
 
     axios
       .post(
-        config.baseUrl+'keywords',
+        config.baseUrl + "keywords",
         {
           keywords: keywordArray,
           websiteUrl: url
@@ -53,29 +53,38 @@ class UserContribute extends Component {
   render() {
     return (
       <div>
-        <span className="input-container">
-          <input
-            type="text"
-            spellCheck="false"
-            className="url"
-            required
-            value={this.state.url}
-            onChange={this.handleUrl}
-            placeholder="URL"
-          />
-          <input
-            type="text"
-            spellCheck="false"
-            className="keyword"
-            required
-            value={this.state.keyword}
-            onChange={this.handleKeyword}
-            placeholder="example - tech, search"
-          />
-          <div onClick={this.handleSubmit}>
-            <CustomButton isDisabled={false} buttonText="Submit" />
+        <div className="heading">Add Keywords</div>
+        <div className="field-container">
+          <span className="input-container">
+            <input
+              type="text"
+              spellCheck="false"
+              className="url"
+              required
+              value={this.state.url}
+              onChange={this.handleUrl}
+              placeholder="URL"
+            />
+          </span>
+          <span className="input-container">
+            <input
+              type="text"
+              spellCheck="false"
+              className="keyword"
+              required
+              value={this.state.keyword}
+              onChange={this.handleKeyword}
+              placeholder="example - tech, search"
+            />
+          </span>
+          <div onClick={this.handleSubmit} className="submit-btn">
+            <CustomButton
+              isDisabled={false}
+              buttonText="Submit"
+              style={{ margin: "0 auto", marginTop: "40px" }}
+            />
           </div>
-        </span>
+        </div>
         <style jsx>
           {`
             .keyword,
@@ -122,6 +131,17 @@ class UserContribute extends Component {
             }
             .mode-toggle-text:focus {
               outline: 0;
+            }
+            .heading {
+              color: #ffffff;
+              font-family: Montserrat;
+              font-size: 50px;
+              margin: 20px 0 20px 0;
+              font-weight: 500;
+            }
+            .field-container {
+              width: 40%;
+              margin: 0 auto;
             }
           `}
         </style>
