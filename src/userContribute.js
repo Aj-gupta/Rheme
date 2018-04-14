@@ -24,15 +24,25 @@ class UserContribute extends Component{
 	}
 	
 	handleSubmit() {
+		
 		let keyword = this.state.keyword;
 		let url = this.state.url;
 		let keywordArray = keyword.split(',');
 		const baseURL = "https://cbd19d91.ngrok.io/";
+		var authOptions = {
+			method: 'POST',
+			url: `${baseURL}keywords`,
+			data:  {
+				keyword: keywordArray,
+				url: url
+			},
+			headers: {
+				'Authorization_Token': localStorage.getItem('authToken')
+			},
+			json: true
+		};
 		
-		axios.post(`${baseURL}keywords`, {
-			keyword: keywordArray,
-			url: url
-		})
+		axios.post(authOptions)
 		.then(function (response) {
 			alert("Keyword Added");
 		})
