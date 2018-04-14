@@ -1,87 +1,84 @@
 import React, { Component } from "react";
 import CustomButton from "./custom-button";
 import axios from "axios";
+import config from "./config.js";
 
-class UserContribute extends Component{
-	constructor(props) {
-		super(props);
-		this.state = {
-			keyword: "",
-			url: ""
-		};
-		
-		this.handleKeyword = this.handleKeyword.bind(this);
-		this.handleUrl = this.handleUrl.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-	}
-	
-	handleKeyword(event) {
-		this.setState({ keyword: event.target.value });
-	}
-	
-	handleUrl(event) {
-		this.setState({ url: event.target.value });
-	}
-	
-	handleSubmit() {
-		
-		let keyword = this.state.keyword;
-		let url = this.state.url;
-		let keywordArray = keyword.split(',');
-		const baseURL = "https://cbd19d91.ngrok.io/";
-		var authOptions = {
-			method: 'POST',
-			url: `${baseURL}keywords`,
-			data:  {
-				keyword: keywordArray,
-				url: url
-			},
-			headers: {
-				'Authorization_Token': localStorage.getItem('authToken')
-			},
-			json: true
-		};
-		
-		axios.post(authOptions)
-		.then(function (response) {
-			alert("Keyword Added");
-		})
-		.catch(function (error) {
-			console.log(error);
-		});
-	}
-	
-	render(){
-		return (
-			<div>
-				<span className="input-container">
-					<input
-						type="text"
-						spellCheck="false"
-						className="url"
-						required
-						value={this.state.url}
-						onChange={this.handleUrl}
-						placeholder="URL"
-					/>
-					<input
-						type="text"
-						spellCheck="false"
-						className="keyword"
-						required
-						value={this.state.keyword}
-						onChange={this.handleKeyword}
-						placeholder="example - tech, search"
-					/>
-					<div onClick={this.handleSubmit}>
-              <CustomButton
-								isDisabled={false}
-								buttonText="Submit"
-							/>
-            </div>
-				</span>
-				<style jsx>{`
-						.keyword,
+class UserContribute extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      keyword: "",
+      url: ""
+    };
+
+    this.handleKeyword = this.handleKeyword.bind(this);
+    this.handleUrl = this.handleUrl.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleKeyword(event) {
+    this.setState({ keyword: event.target.value });
+  }
+
+  handleUrl(event) {
+    this.setState({ url: event.target.value });
+  }
+
+  handleSubmit() {
+    let keyword = this.state.keyword;
+    let url = this.state.url;
+    let keywordArray = keyword.split(",");
+
+    axios
+      .post(
+        config.baseUrl+'keywords',
+        {
+          keywords: keywordArray,
+          websiteUrl: url
+        },
+        {
+          headers: { "authorization-token": localStorage.getItem("authToken") },
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      )
+      .then(function(response) {
+        alert("Keyword Added");
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  render() {
+    return (
+      <div>
+        <span className="input-container">
+          <input
+            type="text"
+            spellCheck="false"
+            className="url"
+            required
+            value={this.state.url}
+            onChange={this.handleUrl}
+            placeholder="URL"
+          />
+          <input
+            type="text"
+            spellCheck="false"
+            className="keyword"
+            required
+            value={this.state.keyword}
+            onChange={this.handleKeyword}
+            placeholder="example - tech, search"
+          />
+          <div onClick={this.handleSubmit}>
+            <CustomButton isDisabled={false} buttonText="Submit" />
+          </div>
+        </span>
+        <style jsx>
+          {`
+            .keyword,
             .url {
               background: none;
               border: none;
@@ -95,7 +92,7 @@ class UserContribute extends Component{
               box-shadow: none;
             }
             .url:focus,
-            .keyword:focus{
+            .keyword:focus {
               outline: 0;
             }
             .input-container:after {
@@ -127,10 +124,10 @@ class UserContribute extends Component{
               outline: 0;
             }
           `}
-				</style>
-			</div>
-		);
-	}
+        </style>
+      </div>
+    );
+  }
 }
 
 export default UserContribute;

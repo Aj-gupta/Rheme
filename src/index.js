@@ -7,7 +7,7 @@ import DashboardAdmin from "./DashboardAdmin";
 import registerServiceWorker from "./registerServiceWorker";
 import { Route, Router, hashHistory } from "react-router";
 
-hashHistory.replace("/app");
+hashHistory.replace("/dashboard-user");
 
 ReactDOM.render(
   <Router path="/" history={hashHistory}>

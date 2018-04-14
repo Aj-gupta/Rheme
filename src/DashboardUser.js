@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead-bs4.css";
+import UserContribute from "./userContribute";
 import { hashHistory } from "react-router";
 
 function Website({ url, hours, hits }) {
@@ -43,11 +44,14 @@ class DashboardUser extends Component {
       options: [],
       data: [],
       showWebsites: false,
-      showData: false
+      showData: false,
+      showContribute: false
     };
 
     this.handleKeyword = this.handleKeyword.bind(this);
     this.retrieveWebsites = this.retrieveWebsites.bind(this);
+    this.handleFind = this.handleFind.bind(this);
+    this.handleContribute = this.handleContribute.bind(this);
   }
 
   componentWillMount() {
@@ -80,10 +84,10 @@ class DashboardUser extends Component {
         { url: "gesture.gecho.tech", hours: 10, hits: 3 },
         { url: "facebook.com", hours: 97, hits: 25 }
       ];
-      const letters = '0123456789ABCDEF';
+      const letters = "0123456789ABCDEF";
       let data = [];
       domains.map(domain => {
-        let color = '#';
+        let color = "#";
         for (var i = 0; i < 6; i++) {
           color += letters[Math.floor(Math.random() * 16)];
         }
@@ -91,11 +95,19 @@ class DashboardUser extends Component {
           title: domain.url,
           value: domain.hits,
           color: color
-        }
+        };
         data.push(object);
       });
       this.setState({ showWebsites: true, domains, data, showData: true });
     }
+  }
+
+  handleFind() {
+    this.setState({ showContribute: false });
+  }
+
+  handleContribute() {
+    this.setState({ showContribute: true });
   }
 
   render() {
@@ -108,47 +120,57 @@ class DashboardUser extends Component {
       <div className="dashboard">
         <header className="header">
           <span className="title main-title">RHEME</span>
-          <span className="title">FIND</span>
-          <span className="title">CONTRIBUTE</span>
-          <span className="title" onClick={this.handleLogout}>LOGOUT</span>
+          <span className="title" onClick={this.handleFind}>
+            FIND
+          </span>
+          <span className="title" onClick={this.handleContribute}>
+            CONTRIBUTE
+          </span>
+          <span className="title" onClick={this.handleLogout}>
+            LOGOUT
+          </span>
           <span className="title">{/* Dummy Data*/}</span>
           <span className="title">{/* Dummy Data*/}</span>
         </header>
-        <div className="container">
-          <form className="search-form">
-            <label className="search-heading">Search for a Website</label>
-            <div className="input-container">
-              <div className="input-grp">
-                <div className="search-bar">
-                  <Typeahead
-                    selectHintOnEnter={true}
-                    highlightOnlyResult={true}
-                    options={this.state.options}
-                    bsSize="large"
-                    placeholder="Search using a Keyword (For e.g. technology, social, etc.)"
-                    onChange={this.handleKeyword}
-                    onKeyDown={this.retrieveWebsites}
-                  />
-                </div>
-                {/* <button className="search-button">
+        {!this.state.showContribute ? (
+          <div className="container">
+            <form className="search-form">
+              <label className="search-heading">Search for a Website</label>
+              <div className="input-container">
+                <div className="input-grp">
+                  <div className="search-bar">
+                    <Typeahead
+                      selectHintOnEnter={true}
+                      highlightOnlyResult={true}
+                      options={this.state.options}
+                      bsSize="large"
+                      placeholder="Search using a Keyword (For e.g. technology, social, etc.)"
+                      onChange={this.handleKeyword}
+                      onKeyDown={this.retrieveWebsites}
+                    />
+                  </div>
+                  {/* <button className="search-button">
                   <span className="search-btn" />
                 </button> */}
+                </div>
               </div>
-            </div>
-          </form>
-          {this.state.showWebsites ? (
-            <div className="website-container">
-              <div className="website-headers">
-                <div className="website-header">URL</div>
-                <div className="website-header">Number of Hours</div>
-                <div className="website-header">Number of Hits</div>
+            </form>
+            {this.state.showWebsites ? (
+              <div className="website-container">
+                <div className="website-headers">
+                  <div className="website-header">URL</div>
+                  <div className="website-header">Number of Hours</div>
+                  <div className="website-header">Number of Hits</div>
+                </div>
+                <div className="websites-list">{websitesList}</div>
               </div>
-              <div className="websites-list">{websitesList}</div>
-            </div>
-          ) : (
-            <div />
-          )}
-        </div>
+            ) : (
+              <div />
+            )}
+          </div>
+        ) : (
+          <UserContribute />
+        )}
         <style jsx>
           {`
             .dashboard {
@@ -229,8 +251,8 @@ class DashboardUser extends Component {
               text-align: left;
               background: #211b35cc;
               border: 2px solid #0a4a7a;
-              -webkit-box-shadow: rgba(0,0,0,0.8) 0px 0 10px;
-              -moz-box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+              -webkit-box-shadow: rgba(0, 0, 0, 0.8) 0px 0 10px;
+              -moz-box-shadow: rgba(0, 0, 0, 0.8) 0 0 10px;
             }
             .websites-list .website-details:nth-child(even) {
               background: #312752;
@@ -263,8 +285,8 @@ class DashboardUser extends Component {
               width: 100%;
               background: #1a162a;
               padding: 0.5em 0.5em;
-              -webkit-box-shadow: rgba(0,0,0,0.8) 0px 0 10px;
-              -moz-box-shadow: rgba(0,0,0,0.8) 0 0 10px;
+              -webkit-box-shadow: rgba(0, 0, 0, 0.8) 0px 0 10px;
+              -moz-box-shadow: rgba(0, 0, 0, 0.8) 0 0 10px;
             }
           `}
         </style>

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { hashHistory } from "react-router";
+import CustomButton from "./custom-button";
 
 function Sublist({
   baseUrl,
@@ -92,14 +93,13 @@ function handleShowDetails(event) {
     }
   }
   // console.log(selectedDiv);
-  if(selectedDiv.classList.contains("sub-details-show")) {
+  if (selectedDiv.classList.contains("sub-details-show")) {
     selectedDiv.classList.remove("sub-details-show");
     caret.classList.remove("caret-rotate");
   } else {
     selectedDiv.classList.add("sub-details-show");
     caret.classList.add("caret-rotate");
   }
-
 }
 
 function Website({
@@ -227,8 +227,12 @@ class DashboardAdmin extends Component {
     super(props);
     this.state = {
       authToken: "",
-      websiteDetails: []
+      websiteDetails: [],
+      showAddField: false,
+      addWebsite: ""
     };
+
+    this.showAddField = this.showAddField.bind(this);
   }
 
   componentWillMount() {
@@ -327,6 +331,20 @@ class DashboardAdmin extends Component {
       });
   }
 
+  showAddField() {
+    this.setState({ showAddField: !this.state.showAddField });
+  }
+
+  addWebsite() {
+    
+  }
+
+  handleAddWebsite(event) {
+    this.setState({
+      addWebsite: event.target.value
+    });
+  }
+
   handleLogout() {
     localStorage.setItem("authToken", "");
     hashHistory.push("/app");
@@ -352,12 +370,34 @@ class DashboardAdmin extends Component {
         <header className="header">
           <span className="title main-title">RHEME</span>
           <span className="title">TRACK</span>
-          <span className="title" onClick={this.handleLogout}>LOGOUT</span>
+          <span className="title" onClick={this.handleLogout}>
+            LOGOUT
+          </span>
           <span className="title">{/* Dummy Data*/}</span>
           <span className="title">{/* Dummy Data*/}</span>
           <span className="title">{/* Dummy Data*/}</span>
         </header>
-        <div className="container-header">Tracked Websites :</div>
+        <div className="heading-container">
+          <div className="container-header">Tracked Websites :</div>
+          <div onClick={this.showAddField}>
+            <CustomButton isDisabled={false} buttonText="Add +" />
+          </div>
+        </div>
+        {this.state.showAddField ? (
+          <div onKeyPress={this.addWebsite}>
+            <input
+              type="text"
+              spellCheck="false"
+              className="search-bar"
+              required
+              value={this.state.addWebsite}
+              onChange={this.handleAddWebsite}
+              placeholder="Website URL"
+            />
+          </div>
+        ) : (
+          <div />
+        )}
         <div className="tracklist-container">{trackList}</div>
         <style jsx>
           {`
@@ -386,14 +426,19 @@ class DashboardAdmin extends Component {
               padding-right: 25%;
               color: #60b2f0;
             }
-            .container-header {
+            .heading-container {
+              display: flex;
+              flex-direction: row;
               font-size: 30px;
               font-family: Montserrat;
               color: white;
               width: 75%;
               margin: 0 auto;
-              text-align: left;
               margin-top: 70px;
+              justify-content: space-between;
+            }
+            .container-header {
+              text-align: left;
             }
             .tracklist-container {
               width: 75%;
@@ -405,8 +450,18 @@ class DashboardAdmin extends Component {
             .tracklist-container .track-web:nth-child(4n) {
               background: #312752;
             }
-            .tracklist-container .track-web:nth-child(4n+1) {
+            .tracklist-container .track-web:nth-child(4n + 1) {
               background: #211b35cc;
+            }
+            .search-bar {
+              width: 65%;
+              height: 40px;
+              border-radius: 10px;
+              border: none;
+              padding: 5px;
+              font-family: Montserrat;
+              font-weight: 600;
+              padding-left: 15px;
             }
           `}
         </style>
