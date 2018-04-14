@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import logo from "./static/rheme-logo.svg";
 import illustration from "./static/landing-page-illustration.svg";
 import CustomButton from "./custom-button";
-import { hashHistory } from "react-router"; 
+import { hashHistory } from "react-router";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -88,6 +89,7 @@ class App extends Component {
   handleSubmit() {
     let apiRequestObject = {};
     let fetchUrl;
+    const baseURL = "https://cbd19d91.ngrok.io/";
 
     if (this.state.email === "") {
       alert("Please enter a valid Email");
@@ -97,42 +99,57 @@ class App extends Component {
       return;
     }
 
-    apiRequestObject.email = this.state.email;
+    apiRequestObject.username = this.state.email;
     apiRequestObject.password = this.state.password;
 
     if (this.state.mode === "Login") {
       if (this.state.toggleCategory === "user") {
-        fetchUrl = "";
+        fetchUrl = `${baseURL}user-login`;
       } else {
-        fetchUrl = "";
+        fetchUrl = `${baseURL}admin-login`;
       }
     } else {
       if (this.state.toggleCategory === "user") {
-        fetchUrl = "";
+        fetchUrl = `${baseURL}user-register`;
         apiRequestObject.firstName = this.state.firstName;
         apiRequestObject.lastName = this.state.lastName;
       } else {
-        fetchUrl = "";
+        fetchUrl = `${baseURL}admin-register`;
         apiRequestObject.firstName = this.state.firstName;
         apiRequestObject.lastName = this.state.lastName;
       }
     }
-
-    fetch(fetchUrl, {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: apiRequestObject
-    })
-      .then(response => response.json())
+    console.log(
+      fetchUrl +
+        "?username=" +
+        apiRequestObject.email +
+        "&password=" +
+        apiRequestObject.password
+    );
+    console.log(apiRequestObject);
+    axios
+      .post(
+        fetchUrl,
+        apiRequestObject,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          }
+        }
+      )
+      // .then(response => response.json())
       .then(responseJson => {
-        if (responseJson.status === 201) {
-          console.log("Yay");
+        localStorage.setItem("authToken", JSON.parse(responseJson.data).authToken);
+        if (this.state.toggleCategory === "user") {
           hashHistory.push("/dashboard-user");
         } else {
-          console.log("Nooo");
+          hashHistory.push("/dashboard-admin");
         }
+      })
+      .catch(error => {
+        // console.log(error.response);
+        alert(error.response.data.message);
       });
   }
 
@@ -246,7 +263,7 @@ class App extends Component {
                   required
                   value={this.state.email}
                   onChange={this.handleEmail}
-                  placeholder="Email"
+                  placeholder="Username"
                 />
               </span>
               <span className="input-container">

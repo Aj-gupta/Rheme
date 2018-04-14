@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Typeahead } from "react-bootstrap-typeahead";
 import "react-bootstrap-typeahead/css/Typeahead.css";
 import "react-bootstrap-typeahead/css/Typeahead-bs4.css";
-import PieChart from "react-svg-piechart"
+import { hashHistory } from "react-router";
 
 function Website({ url, hours, hits }) {
   return (
@@ -59,6 +59,11 @@ class DashboardUser extends Component {
     this.setState({ keyword: value[0] });
   }
 
+  handleLogout() {
+    localStorage.setItem("authToken", "");
+    hashHistory.push("/app");
+  }
+
   retrieveWebsites(event) {
     if (event.keyCode === 13) {
       console.log("retirvieng websites");
@@ -105,7 +110,7 @@ class DashboardUser extends Component {
           <span className="title main-title">RHEME</span>
           <span className="title">FIND</span>
           <span className="title">CONTRIBUTE</span>
-          <span className="title">{/* Dummy Data*/}</span>
+          <span className="title" onClick={this.handleLogout}>LOGOUT</span>
           <span className="title">{/* Dummy Data*/}</span>
           <span className="title">{/* Dummy Data*/}</span>
         </header>
@@ -140,16 +145,6 @@ class DashboardUser extends Component {
               </div>
               <div className="websites-list">{websitesList}</div>
             </div>
-          ) : (
-            <div />
-          )}
-          {this.state.showData ? (
-            <PieChart
-              data={this.state.data}
-              // expandOnHover
-              viewBoxSize={5}
-              strokeWidth={0}
-            />
           ) : (
             <div />
           )}
