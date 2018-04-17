@@ -321,6 +321,7 @@ class DashboardAdmin extends Component {
 
   handleLogout() {
     localStorage.setItem("authToken", "");
+    localStorage.setItem("modeOfLogin", "");
     hashHistory.push("/app");
   }
 
@@ -343,7 +344,11 @@ class DashboardAdmin extends Component {
         );
       });
     } else {
-      trackList = <div style={{fontFamily: "Montserrat", fontSize: "25px"}}>No websites added</div>;
+      trackList = (
+        <div style={{ fontFamily: "Montserrat", fontSize: "25px" }}>
+          No websites added
+        </div>
+      );
     }
     return (
       <div className="dashboard">

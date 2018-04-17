@@ -1,5 +1,5 @@
 const config = {
-    "baseUrl": "https://33d3ebbc.ngrok.io/"
+  baseUrl: "https://41f60e6f.ngrok.io/"
 };
 
 export default config;

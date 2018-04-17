@@ -82,6 +82,7 @@ class DashboardUser extends Component {
 
   handleLogout() {
     localStorage.setItem("authToken", "");
+    localStorage.setItem("modeOfLogin", "");
     hashHistory.push("/app");
   }
 

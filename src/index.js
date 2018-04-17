@@ -7,7 +7,20 @@ import DashboardAdmin from "./DashboardAdmin";
 import registerServiceWorker from "./registerServiceWorker";
 import { Route, Router, hashHistory } from "react-router";
 
-hashHistory.replace("/app");
+(function() {
+  if (
+    localStorage.getItem("authToken") === null ||
+    localStorage.getItem("authToken") === ""
+  ) {
+    hashHistory.replace("/app");
+  } else {
+    if (localStorage.getItem("modeOfLogin") === "user") {
+      hashHistory.replace("/dashboard-user");
+    } else {
+      hashHistory.replace("/dashboard-admin");
+    }
+  }
+})();
 
 ReactDOM.render(
   <Router path="/" history={hashHistory}>

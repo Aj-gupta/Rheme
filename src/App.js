@@ -4,7 +4,7 @@ import illustration from "./static/landing-page-illustration.svg";
 import CustomButton from "./custom-button";
 import { hashHistory } from "react-router";
 import axios from "axios";
-import config from "./config.js"
+import config from "./config.js";
 
 class App extends Component {
   constructor(props) {
@@ -129,23 +129,24 @@ class App extends Component {
     );
     console.log(apiRequestObject);
     axios
-      .post(
-        fetchUrl,
-        apiRequestObject,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          }
+      .post(fetchUrl, apiRequestObject, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
         }
-      )
+      })
       // .then(response => response.json())
       .then(responseJson => {
-        localStorage.setItem("authToken", JSON.parse(responseJson.data).authToken);
+        localStorage.setItem(
+          "authToken",
+          JSON.parse(responseJson.data).authToken
+        );
         if (this.state.toggleCategory === "user") {
           hashHistory.push("/dashboard-user");
+          localStorage.setItem("modeOfLogin", "user");
         } else {
           hashHistory.push("/dashboard-admin");
+          localStorage.setItem("modeOfLogin", "admin");
         }
       })
       .catch(error => {
