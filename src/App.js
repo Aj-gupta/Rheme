@@ -4,6 +4,7 @@ import illustration from "./static/landing-page-illustration.svg";
 import CustomButton from "./custom-button";
 import { hashHistory } from "react-router";
 import axios from "axios";
+import config from "./config.js"
 
 class App extends Component {
   constructor(props) {
@@ -89,7 +90,7 @@ class App extends Component {
   handleSubmit() {
     let apiRequestObject = {};
     let fetchUrl;
-    const baseURL = "https://cbd19d91.ngrok.io/";
+    const baseURL = config.baseUrl;
 
     if (this.state.email === "") {
       alert("Please enter a valid Email");
@@ -321,6 +322,7 @@ class App extends Component {
               display: flex;
               flex-direction: row;
               justify-content: space-between;
+              margin-top: 40px;
             }
             .logo {
               height: 98px;
@@ -331,9 +333,6 @@ class App extends Component {
               padding: 15px;
               font-size: 48px;
               line-height: 98px;
-            }
-            .left-side {
-              padding-left: 15%;
             }
             .logo-combined {
               display: flex;
@@ -376,7 +375,7 @@ class App extends Component {
             }
             .right-side {
               min-width: 45%;
-              margin-right: 10%;
+              margin-left: 15%;
             }
             .toggle-btn {
               background: none;

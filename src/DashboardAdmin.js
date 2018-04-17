@@ -173,6 +173,7 @@ function Website({
             font-size: 20px;
             padding-left: 25px;
             padding-bottom: 5px;
+            cursor: pointer;
           }
           .url {
             width: 50%;
@@ -324,20 +325,26 @@ class DashboardAdmin extends Component {
   }
 
   render() {
-    let i = 0;
-    const trackList = this.state.websiteDetails.map(website => {
-      i++;
-      return (
-        <Website
-          baseUrl={website.baseUrl}
-          totalHits={website.totalHits}
-          usageHours={website.total_usage_hours}
-          noOfVisitors={website.no_of_visitors}
-          details={website.details}
-          index={i}
-        />
-      );
-    });
+    let trackList;
+    console.log(this.state.websiteDetails);
+    if (this.state.websiteDetails.length !== 0) {
+      let i = 0;
+      trackList = this.state.websiteDetails.map(website => {
+        i++;
+        return (
+          <Website
+            baseUrl={website.baseUrl}
+            totalHits={website.totalHits}
+            usageHours={website.total_usage_hours}
+            noOfVisitors={website.no_of_visitors}
+            details={website.details}
+            index={i}
+          />
+        );
+      });
+    } else {
+      trackList = <div style={{fontFamily: "Montserrat", fontSize: "25px"}}>No websites added</div>;
+    }
     return (
       <div className="dashboard">
         <header className="header">
